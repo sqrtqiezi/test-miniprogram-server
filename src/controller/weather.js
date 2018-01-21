@@ -1,25 +1,28 @@
 'use strict'
 
-const _ = require('../util/api');
-const validate = _.validate;
+function random(min, max) {
+    return Math.random() * (max - min) + min;
+}
 
 async function getNow(ctx, next) {
-    // 判断格式
-    let query = validate(ctx.query, {
-        latitude: { required: true, isNumber: true }, // 纬度
-        longitude: { required: true, isNumber: true }, // 经度
-    });
+    let forecast = []
+    for (let i = 0; i < 24; i++) {
+        forecast.push({
+            temp: random(0, 30),
+            weaher: 'sunny',
+        });
+    }
 
-    ctx.result = [];
+    ctx.result = {
+        now: {
+            temp: random(0, 30),
+            weaher: 'sunny',
+        },
+        forecast
+    };
 }
 
 async function getFuture(ctx, next) {
-    // 判断格式
-    let query = validate(ctx.query, {
-        latitude: { required: true, isNumber: true }, // 纬度
-        longitude: { required: true, isNumber: true }, // 经度
-    });
-
     ctx.result = [];
 }
 
