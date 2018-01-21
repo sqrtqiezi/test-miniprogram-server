@@ -9,14 +9,14 @@ async function getNow(ctx, next) {
     for (let i = 0; i < 24; i++) {
         forecast.push({
             temp: random(0, 30),
-            weaher: 'sunny',
+            weather: 'sunny',
         });
     }
 
     ctx.result = {
         now: {
             temp: random(0, 30),
-            weaher: 'sunny',
+            weather: 'sunny',
         },
         forecast
     };
