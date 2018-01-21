@@ -1,0 +1,13 @@
+{
+  "name": "test-miniprogram-sever",
+  "version": "0.0.1",
+  "scripts": {
+    "start": "node ./src/app.js"
+  },
+  "author": "june_01",
+  "dependencies": {
+    "koa": "^2.2.0",
+    "koa-bodyparser": "^4.2.0",
+    "koa-router": "^7.2.0"
+  }
+}
