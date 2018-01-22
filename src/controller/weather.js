@@ -1,7 +1,12 @@
 'use strict'
 
 function random(min, max) {
-    return parseInt(Math.random() * (max - min) + min, 10);
+    return Math.floor(Math.random() * (max - min) + min);
+}
+
+const weatherArr = ['sunny', 'cloudy', 'overcast', 'lightrain', 'heavyrain', 'snow']
+function randomWeather() {
+    return weatherArr[random(0, 6)]
 }
 
 async function getNow(ctx, next) {
