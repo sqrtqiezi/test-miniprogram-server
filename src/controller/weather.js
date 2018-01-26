@@ -29,9 +29,9 @@ async function getNow(ctx, next) {
 
 async function getFuture(ctx, next) {
     let future = [];
-    let temp1 = random(-10, 20);
-    let temp2 = random(-10, 20);
     for (let i = 0; i < 7; i++) {
+        let temp1 = random(-10, 20);
+        let temp2 = random(-10, 20);
         future.push({
             minTemp: Math.min(temp1, temp2),
             maxTemp: Math.max(temp1, temp2),
