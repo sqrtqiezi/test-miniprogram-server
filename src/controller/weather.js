@@ -32,6 +32,9 @@ async function getFuture(ctx, next) {
     for (let i = 0; i < 7; i++) {
         let temp1 = random(-10, 20);
         let temp2 = random(-10, 20);
+
+        if (temp1 === temp2) temp2 += 3;
+
         future.push({
             minTemp: Math.min(temp1, temp2),
             maxTemp: Math.max(temp1, temp2),
