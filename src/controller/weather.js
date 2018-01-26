@@ -11,7 +11,7 @@ function randomWeather() {
 
 async function getNow(ctx, next) {
     let forecast = [];
-    for (let i = 0; i < 24; i++) {
+    for (let i = 0; i < 8; i++) {
         forecast.push({
             temp: random(-10, 20),
             weather: randomWeather(),
@@ -20,8 +20,8 @@ async function getNow(ctx, next) {
 
     ctx.result = {
         now: {
-            temp: random(-10, 20),
-            weather: randomWeather(),
+            temp: forecast[0].temp,
+            weather: forecast[0].weather,
         },
         forecast
     };
