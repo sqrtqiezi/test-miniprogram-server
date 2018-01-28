@@ -29,8 +29,8 @@ async function getNow(ctx, next) {
             weather: forecast[0].weather,
         },
         today: {
-            minTemp: Math.min(temp1, temp2),
-            maxTemp: Math.max(temp1, temp2),
+            minTemp: Math.min(temp1, temp2, forecast[0].temp),
+            maxTemp: Math.max(temp1, temp2, forecast[0].temp),
         },
         forecast
     };
