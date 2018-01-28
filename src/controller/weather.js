@@ -18,10 +18,19 @@ async function getNow(ctx, next) {
         });
     }
 
+    let temp1 = random(-10, 20);
+    let temp2 = random(-10, 20);
+
+    if (temp1 === temp2) temp2 += 3;
+
     ctx.result = {
         now: {
             temp: forecast[0].temp,
             weather: forecast[0].weather,
+        },
+        today: {
+            minTemp: Math.min(temp1, temp2),
+            maxTemp: Math.max(temp1, temp2),
         },
         forecast
     };
