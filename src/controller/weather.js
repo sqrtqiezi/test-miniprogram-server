@@ -100,6 +100,7 @@ async function getNow(ctx, next) {
 
     // 未来24小时
     let forecast = getForecastWeather();
+    forecast.unshift({ weather, temp });
 
     ctx.result = {
         now: {
@@ -119,6 +120,7 @@ async function getFuture(ctx, next) {
     let { weather, temp, minTemp, maxTemp } = getTodayWeather();
 
     let future = generateFutureWeather();
+    future.unshift({ weather, minTemp, maxTemp });
 
     ctx.result = future;
 }
