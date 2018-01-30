@@ -119,7 +119,7 @@ async function getFuture(ctx, next) {
     // 今天
     let { weather, temp, minTemp, maxTemp } = getTodayWeather();
 
-    let future = generateFutureWeather();
+    let future = getFutureWeather();
     future.unshift({ weather, minTemp, maxTemp });
 
     ctx.result = future;
