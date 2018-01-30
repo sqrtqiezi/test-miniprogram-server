@@ -59,7 +59,7 @@ function generateForecastWeather() {
 
         forecast.push({ weather, temp });
     }
-    return [].concat(forecast);
+    return forecast;
 }
 function getForecastWeather() {
     let now = +new Date();
@@ -69,7 +69,7 @@ function getForecastWeather() {
         forecast = generateForecastWeather();
     }
 
-    return forecast;
+    return [].concat(forecast);
 }
 
 let lastUpdateFutureTime = +new Date();
@@ -81,7 +81,7 @@ function generateFutureWeather() {
 
         future.push({ weather, minTemp, maxTemp });
     }
-    return [].concat(future);
+    return future;
 }
 function getFutureWeather() {
     let now = +new Date();
@@ -91,7 +91,7 @@ function getFutureWeather() {
         future = generateFutureWeather();
     }
 
-    return future;
+    return [].concat(future);
 }
 
 async function getNow(ctx, next) {
