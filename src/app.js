@@ -26,14 +26,12 @@ app.use(async (ctx, next) => {
     try {
         await next();
 
-        if (ctx.result) {
-            // 组装正确返回结果
-            ctx.body = {
-                code: 200,
-                message: ctx.msg || 'success',
-                result: ctx.result || {}
-            };
-        }
+        // 组装正确返回结果
+        ctx.body = {
+            code: 200,
+            message: ctx.msg || 'success',
+            result: ctx.result || {}
+        };
     } catch (err) {
         console.error(err.stack);
 

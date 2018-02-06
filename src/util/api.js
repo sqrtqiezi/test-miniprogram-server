@@ -1,5 +1,7 @@
 'use strict'
 
+let id = +new Date();
+
 module.exports = {
 	/**
 	 * 格式化时间
@@ -24,6 +26,13 @@ module.exports = {
 			return map[$1];
 		});
 	},
+
+    /**
+     * 获取唯一id
+     */
+    getId() {
+        return id++;
+    },
 
 	/**
      * 验证数据

@@ -6,8 +6,12 @@
   },
   "author": "june_01",
   "dependencies": {
+    "cheerio": "^1.0.0-rc.2",
+    "feedparser": "^2.2.9",
+    "iconv": "^2.3.0",
     "koa": "^2.2.0",
     "koa-bodyparser": "^4.2.0",
-    "koa-router": "^7.2.0"
+    "koa-router": "^7.2.0",
+    "request": "^2.83.0"
   }
 }
