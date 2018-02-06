@@ -211,7 +211,7 @@ async function fetchNews(type) {
         }
     }
 
-    if (news && news.length > 5) {
+    if (news && news.length) {
         saveToCache(type, news);
         newsMap[type] = news;
     }
