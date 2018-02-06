@@ -67,12 +67,12 @@ function fetchContent($, contentNode) {
             if (src) list.push({ type: 'image', src });
         } else if (strong.length === 1) {
             // 加粗
-            let text = strong.text();
+            let text = strong.text().trim();
 
             if (text) list.push({ type: 'strong', text });
         } else if (!children.length) {
             // 纯文本
-            let text = p.text();
+            let text = p.text().trim();
             if (text) list.push({ type: 'p', text });
         }
     });
