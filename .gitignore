@@ -3,3 +3,5 @@ node_modules
 q
 .DS_Store
 npm-debug.log
+package-lock.json
+src/news-cache

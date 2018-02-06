@@ -6,7 +6,12 @@ async function getList(ctx, next) {
         type: { required: true, value: /^(gn|gj|cj|yl|js|ty|other)$/g }
     });
 
-    ctx.result = await rss.getList(type);
+    let news = await rss.getList(type);
+    news.forEach(item => {
+        delete item.content;
+    });
+
+    ctx.result = news;
 }
 
 async function get(ctx, next) {
