@@ -7,8 +7,10 @@ async function getList(ctx, next) {
     });
 
     let news = await rss.getList(type);
-    news.forEach(item => {
-        delete item.content;
+    news = news.map(item => {
+        let { id, title, date, source, firstImage } = item;
+
+        return { id, title, date, source, firstImage };
     });
 
     ctx.result = news;
