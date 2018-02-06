@@ -207,7 +207,7 @@ async function fetchNews(type) {
         let { source = '腾讯网', firstImage, content } = await fetchDetail(link);
 
         if (firstImage && content.length) {
-            news.push({ id: _.getId(), title, date, source, firstImage, content });
+            news.push({ id: _.getId(), title, date, source, firstImage, content, readCount: _.random(30, 3000) });
         }
     }
 

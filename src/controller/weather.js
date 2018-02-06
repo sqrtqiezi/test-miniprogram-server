@@ -1,24 +1,22 @@
-function random(min, max) {
-    return Math.floor(Math.random() * (max - min) + min);
-}
+const _ = require('../util/api');
 
 function randomTemp(weather, minA, minB, maxA, maxB) {
-    let temp1 = random(minA, minB);
-    let temp2 = random(maxA, maxB);
+    let temp1 = _.random(minA, minB);
+    let temp2 = _.random(maxA, maxB);
     if (temp1 === temp2) temp2 += 3;
 
     let minTemp = Math.min(temp1, temp2);
     let maxTemp = Math.max(temp1, temp2);
     return {
         weather,
-        temp: random(minTemp, maxTemp + 1),
+        temp: _.random(minTemp, maxTemp + 1),
         minTemp,
         maxTemp, 
     };
 }
 
 function randomWeather() {
-    let r = random(0, 100); // 0 - 99
+    let r = _.random(0, 100); // 0 - 99
 
     if (r >= 0 && r < 30) {
         return randomTemp('sunny', 0, 10, 10, 25); // 30%

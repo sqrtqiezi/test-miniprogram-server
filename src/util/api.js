@@ -34,6 +34,13 @@ module.exports = {
         return id++;
     },
 
+    /**
+     * 生成随机数
+     */
+    random(min, max) {
+        return Math.floor(Math.random() * (max - min) + min);
+    },
+
 	/**
      * 验证数据
      */
