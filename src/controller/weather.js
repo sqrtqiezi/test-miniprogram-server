@@ -53,7 +53,7 @@ function generateForecastWeather() {
     for (let i = 1; i < 8; i++) {
         let { weather, temp } = randomWeather()
 
-        forecast.push({ weather, temp });
+        forecast.push({ weather, temp, id: i });
     }
     return forecast;
 }
@@ -75,7 +75,7 @@ function generateFutureWeather() {
     for (let i = 1; i < 7; i++) {
         let { weather, minTemp, maxTemp } = randomWeather()
 
-        future.push({ weather, minTemp, maxTemp });
+        future.push({ weather, minTemp, maxTemp, id: i });
     }
     return future;
 }
@@ -96,7 +96,7 @@ async function getNow(ctx, next) {
 
     // 未来24小时
     let forecast = getForecastWeather();
-    forecast.unshift({ weather, temp });
+    forecast.unshift({ weather, temp, id: 0 });
 
     ctx.result = {
         now: {
@@ -116,7 +116,7 @@ async function getFuture(ctx, next) {
     let { weather, temp, minTemp, maxTemp } = getTodayWeather();
 
     let future = getFutureWeather();
-    future.unshift({ weather, minTemp, maxTemp });
+    future.unshift({ weather, minTemp, maxTemp, id: 0 });
 
     ctx.result = future;
 }
