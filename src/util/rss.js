@@ -53,6 +53,7 @@ const newsTypeMap = {
  */
 function fetchContent($, contentNode) {
     let list = [];
+    let id = 0;
     contentNode.children('p').each((index, p) => {
         p = $(p);
 
@@ -64,16 +65,16 @@ function fetchContent($, contentNode) {
             // 图片节点
             let src = img.attr('src');
 
-            if (src) list.push({ type: 'image', src });
+            if (src) list.push({ type: 'image', src, id: ++id });
         } else if (strong.length === 1) {
             // 加粗
             let text = strong.text().trim();
 
-            if (text) list.push({ type: 'strong', text });
+            if (text) list.push({ type: 'strong', text, id: ++id });
         } else if (!children.length) {
             // 纯文本
             let text = p.text().trim();
-            if (text) list.push({ type: 'p', text });
+            if (text) list.push({ type: 'p', text, id: ++id });
         }
     });
 
