@@ -1,1 +1,1 @@
-# test-miniprogram-sever
+# test-miniprogram-server
