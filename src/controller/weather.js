@@ -1,124 +1,131 @@
 const _ = require('../util/api');
+const request = require('request');
+const { APP_ID } = require('../config/config');
+const utils = require('../util/api');
 
-function randomTemp(weather, minA, minB, maxA, maxB) {
-    let temp1 = _.random(minA, minB);
-    let temp2 = _.random(maxA, maxB);
-    if (temp1 === temp2) temp2 += 3;
+function formatForecastData(data) {
+    const today = utils.format(new Date(), 'yyyy-MM-dd');
+    const map = new Map();
 
-    let minTemp = Math.min(temp1, temp2);
-    let maxTemp = Math.max(temp1, temp2);
-    return {
-        weather,
-        temp: _.random(minTemp, maxTemp + 1),
-        minTemp,
-        maxTemp, 
-    };
-}
+    data.list.forEach(forecast => {
+        const key = forecast.dt_txt.substr(0, 10);
+        
+        if (!map.has(key)) {
+            map.set(key, {
+                temps   : [forecast.main.temp],
+                weathers: [forecast.weather[0].description],
+                maxTemp : forecast.main.temp_max,
+                minTemp : forecast.main.temp_min
+            });
+        } else {
+            const item = map.get(key);
 
-function randomWeather() {
-    let r = _.random(0, 100); // 0 - 99
+            item.temps.push(forecast.main.temp);
+            item.weathers.push(forecast.weather[0].description);
+            item.maxTemp = Math.max(item.maxTemp, forecast.main.temp_max);
+            item.minTemp = Math.min(item.minTemp, forecast.main.temp_min);
+        }
+    });
+    
+    const forecast = [];
+    const keys = Array.from(map.keys()).sort();
+    for(let i = 0; i < keys.length; i++) {
+        const item = map.get(keys[i]);
 
-    if (r >= 0 && r < 30) {
-        return randomTemp('sunny', 0, 10, 10, 25); // 30%
-    } else if (r >= 30 && r < 55) {
-        return randomTemp('cloudy', -5, 10, 5, 20); // 25%
-    } else if (r >= 55 && r < 75) {
-        return randomTemp('overcast', -5, 10, 5, 20); // 20%
-    } else if (r >= 75 && r < 90) {
-        return randomTemp('lightrain', -5, 5, 5, 15); // 15%
-    } else if (r >= 90 && r < 95) {
-        return randomTemp('heavyrain', -10, 5, 5, 10); // 5%
-    } else if (r >= 95 && r < 100) {
-        return randomTemp('snow', -20, 0, -10, 5); // 5%
-    }
-}
+        const temp = item.temps.reduce((sum, temp) => {
+            return sum + temp;
+        }, 0) / item.temps.length;
 
-let lastUpdateTodayTime = +new Date();
-let today = randomWeather();
-function getTodayWeather() {
-    let now = +new Date();
-    if (now - lastUpdateTodayTime >= 180000) {
-        // 超过3min需要更新
-        lastUpdateTodayTime = now;
-        today = randomWeather();
-    }
-
-    return today;
-}
-
-let lastUpdateForecastTime = +new Date();
-let forecast = generateForecastWeather();
-function generateForecastWeather() {
-    let forecast = [];
-    for (let i = 1; i < 8; i++) {
-        let { weather, temp } = randomWeather()
-
-        forecast.push({ weather, temp, id: i });
+        forecast.push({
+            id: i,
+            weather: item.weathers[0],
+            temp: Math.round(temp),
+            maxTemp: Math.round(item.maxTemp),
+            minTemp: Math.round(item.minTemp)
+        });
     }
     return forecast;
 }
-function getForecastWeather() {
-    let now = +new Date();
-    if (now - lastUpdateForecastTime >= 60000) {
-        // 超过1min需要更新
-        lastUpdateForecastTime = now;
-        forecast = generateForecastWeather();
-    }
 
-    return [].concat(forecast);
+function formatWeatherData(data) {
+    return {
+        temp: data.main.temp,
+        weather: data.weather[0].description
+    }
 }
 
-let lastUpdateFutureTime = +new Date();
-let future = generateFutureWeather();
-function generateFutureWeather() {
-    let future = [];
-    for (let i = 1; i < 7; i++) {
-        let { weather, minTemp, maxTemp } = randomWeather()
-
-        future.push({ weather, minTemp, maxTemp, id: i });
-    }
-    return future;
+async function getForecast(city) {
+    return new Promise((resolve, reject) => {
+        request({
+            url: `http://api.openweathermap.org/data/2.5/forecast?q=${city},cn&mode=json&units=metric&appid=${APP_ID}`
+        }, (err, response, body) => {
+            if (err) {
+                reject(err);
+            } else {
+                const data = JSON.parse(body.toString());
+                const result = formatForecastData(data);
+                resolve(result);
+            }
+        })
+    });
 }
-function getFutureWeather() {
-    let now = +new Date();
-    if (now - lastUpdateFutureTime >= 60000) {
-        // 超过1min需要更新
-        lastUpdateFutureTime = now;
-        future = generateFutureWeather();
-    }
 
-    return [].concat(future);
+async function getWeather(city) {
+    return new Promise((resolve, reject) => {
+        request({
+            url: `http://api.openweathermap.org/data/2.5/weather?q=${city},cn&mode=json&units=metric&appid=${APP_ID}`
+        }, (err, response, body) => {
+            if (err) {
+                reject(err);
+            } else {
+                const data = JSON.parse(body.toString());
+                const result = formatWeatherData(data);
+                resolve(result);
+            }
+        })
+    });
 }
 
 async function getNow(ctx, next) {
-    // 今天
-    let { weather, temp, minTemp, maxTemp } = getTodayWeather();
+    let { city } = _.validate(ctx.query, {
+        city: { required: true }
+    });
+    try {
+        const weatherPromise = getWeather(city);
+        const forecastPromise = getForecast(city);
 
-    // 未来24小时
-    let forecast = getForecastWeather();
-    forecast.unshift({ weather, temp, id: 0 });
+        const now = await weatherPromise;
+        const forecast = await forecastPromise;
 
-    ctx.result = {
-        now: {
-            temp,
-            weather,
-        },
-        today: {
-            minTemp,
-            maxTemp,
-        },
-        forecast
-    };
+        ctx.result = {
+            now,
+            today: {
+                minTemp: forecast[0].minTemp,
+                maxTemp: forecast[0].maxTemp
+            },
+            forecast: forecast.map(({ weather, temp, id}) => ({
+                weather, temp, id
+            }))
+        }
+    } catch (err) {
+        console.error(err);
+        //TODO:此处应该返回错误信息
+    }
 }
 
 async function getFuture(ctx, next) {
-    // 今天
-    let { weather, temp, minTemp, maxTemp } = getTodayWeather();
-
-    let future = getFutureWeather();
-    future.unshift({ weather, minTemp, maxTemp, id: 0 });
-
-    ctx.result = future;
+    let { city } = _.validate(ctx.query, {
+        city: { required: true }
+    });
+    try {
+        const forecast = await getForecast(city);
+        ctx.result = forecast.map(({ weather, maxTemp, minTemp, id }) => ({
+            weather, maxTemp, minTemp, id
+        }));
+    } catch (err) {
+        console.error(err);
+        //TODO:此处应该返回错误信息
+    }
 }
 
 module.exports = {
