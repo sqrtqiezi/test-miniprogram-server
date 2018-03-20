@@ -91,6 +91,10 @@ function getFutureWeather() {
 }
 
 async function getNow(ctx, next) {
+    let { city } = _.validate(ctx.query, {
+        city: { required: true, isString: true }
+    });
+
     // 今天
     let { weather, temp, minTemp, maxTemp } = getTodayWeather();
 
@@ -112,6 +116,11 @@ async function getNow(ctx, next) {
 }
 
 async function getFuture(ctx, next) {
+    let { city, time } = _.validate(ctx.query, {
+        city: { required: true, isString: true },
+        time: { required: true, isNumber: true }
+    });
+
     // 今天
     let { weather, temp, minTemp, maxTemp } = getTodayWeather();
 
