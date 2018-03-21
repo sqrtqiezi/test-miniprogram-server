@@ -1,3 +1,4 @@
 module.exports = {
-    APP_ID: ''
+    APP_ID: '',
+    CACHE_LIST: ['shanghai', 'beijing', 'shenzhen', 'hefei']
 }

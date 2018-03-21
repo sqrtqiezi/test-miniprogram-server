@@ -2,7 +2,9 @@
   "name": "test-miniprogram-server",
   "version": "0.0.1",
   "scripts": {
-    "start": "node ./src/app.js"
+    "start": "node ./src/app.js",
+    "cache:future": "node ./src/cache-future.js",
+    "cache:now": "node ./src/cache-now.js"
   },
   "author": "june_01",
   "dependencies": {
